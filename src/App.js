@@ -58,7 +58,7 @@ const average = (arr) =>
 const KEY = "32b121ed";
 
 export default function App() {
-  const [query, setQuery] = useState("Avengers");
+  const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
@@ -220,6 +220,7 @@ function NumResult({ movies }) {
 function MovieDescription({ selectedId, onCloseMovie }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const {
     Title: title,
@@ -234,18 +235,23 @@ function MovieDescription({ selectedId, onCloseMovie }) {
     Genre: genre,
   } = movie;
 
-  console.log(title, year);
-
   useEffect(
     function () {
       async function getMovieDescription() {
-        setIsLoading(true);
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
-        );
-        const data = await res.json();
-        setMovie(data);
-        setIsLoading(false);
+        try {
+          setIsLoading(true);
+          const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
+          );
+
+          const data = await res.json();
+          setMovie(data);
+        } catch (error) {
+          console.error(error.message);
+          setError(error.message);
+        } finally {
+          setIsLoading(false);
+        }
       }
       getMovieDescription();
     },
@@ -254,9 +260,8 @@ function MovieDescription({ selectedId, onCloseMovie }) {
 
   return (
     <div className="details">
-      {isLoading ? (
-        <Loader />
-      ) : (
+      {isLoading && <Loader />}
+      {!isLoading && !error && (
         <>
           <header className="">
             <button className="btn-back" onClick={onCloseMovie}>
@@ -293,6 +298,7 @@ function MovieDescription({ selectedId, onCloseMovie }) {
           </section>
         </>
       )}
+      {error && <ErrorMessage message={error} />}
     </div>
   );
 }
