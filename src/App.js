@@ -221,6 +221,7 @@ function MovieDescription({ selectedId, onCloseMovie }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [movieRating, setMovieRating] = useState(0);
 
   const {
     Title: title,
@@ -288,6 +289,7 @@ function MovieDescription({ selectedId, onCloseMovie }) {
                 size={24}
                 color="yellow"
                 defaultRating={0}
+                onSetRating={setMovieRating}
               />
             </div>
             <p>
