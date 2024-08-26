@@ -128,7 +128,7 @@ body {
 
 .box {
   width: 48rem;
-  max-height: 80dvh;
+  min-height: 40rem;
   background-color: var(--color-background-500);
   border-radius: 0.9rem;
   overflow: auto;
