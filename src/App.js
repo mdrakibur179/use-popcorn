@@ -298,6 +298,14 @@ function MovieDescription({
     [selectedId]
   );
 
+  useEffect(
+    function () {
+      if (!title) return;
+      document.title = `${title}`;
+    },
+    [title]
+  );
+
   return (
     <div className="details">
       {isLoading && <Loader />}
