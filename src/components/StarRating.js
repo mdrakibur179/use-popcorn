@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 const containerStyle = {
   display: "flex",
   alignItems: "center",
+  flexDirection: "column",
   gap: "1rem",
 };
 
