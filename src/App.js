@@ -109,7 +109,6 @@ export default function App() {
           if (data.Response === "False") throw new Error("Movie not found");
 
           setMovies(data.Search);
-          console.log(data.Search);
         } catch (err) {
           console.error(err.message);
           setError(err.message);
@@ -301,8 +300,13 @@ function MovieDescription({
   useEffect(
     function () {
       if (!title) return;
-      document.title = `${title}`;
+      document.title = `Movie - ${title}`;
+
+      return function () {
+        document.title = "usePopcorn";
+      };
     },
+
     [title]
   );
 
