@@ -356,6 +356,12 @@ body {
   gap: 1.4rem;
 }
 
+.watched-movie-stats {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .details-overview h2 {
   font-size: 2.4rem;
   margin-bottom: 0.4rem;

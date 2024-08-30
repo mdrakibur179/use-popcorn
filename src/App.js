@@ -93,12 +93,15 @@ export default function App() {
 
   useEffect(
     function () {
+      const controller = new AbortController();
+
       async function fetchMovies() {
         try {
           setIsLoading(true);
           setError("");
           const res = await fetch(
-            `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            { signal: controller.signal }
           );
 
           if (!res.ok)
@@ -109,21 +112,30 @@ export default function App() {
           if (data.Response === "False") throw new Error("Movie not found");
 
           setMovies(data.Search);
+          setError("");
         } catch (err) {
-          console.error(err.message);
-          setError(err.message);
+          if (err.name !== "AbortError") {
+            console.error(err.message);
+            setError(err.message);
+          }
         } finally {
           setIsLoading(false);
         }
       }
 
-      if (query.length <= 0) {
+      if (query.length < 1) {
         setMovies([]);
         setError("");
         return;
       }
 
+      handleMovieClose();
+
       fetchMovies();
+
+      return function () {
+        controller.abort();
+      };
     },
     [query]
   );
@@ -276,11 +288,28 @@ function MovieDescription({
 
   useEffect(
     function () {
+      function callBack(e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+          console.log("Closed");
+        }
+      }
+      document.addEventListener("keydown", callBack);
+
+      return function () {
+        document.removeEventListener("keydown", callBack);
+      };
+    },
+    [onCloseMovie]
+  );
+
+  useEffect(
+    function () {
       async function getMovieDescription() {
         try {
           setIsLoading(true);
           const res = await fetch(
-            `https://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
+            `http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`
           );
 
           const data = await res.json();
@@ -417,7 +446,7 @@ function WatchedList({ movie, onDeleteMovie }) {
     <li>
       <img src={movie.poster} alt={`${movie.title} poster`} />
       <h3>{movie.title}</h3>
-      <div>
+      <div className="watched-movie-stats">
         <p>
           <span>⭐️</span>
           <span>{movie.imdbRating}</span>
