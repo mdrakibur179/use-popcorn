@@ -271,24 +271,6 @@ function MovieDescription({
     Genre: genre,
   } = movie;
 
-  // eslint-disable-next-line no-undef
-  // if (imdbRating > 8) [isTop, setIsTop] = useState(false);
-
-  // const [isTop, setIsTop] = useState(imdbRating > 8);
-  // console.log(isTop);
-
-  // useEffect(
-  //   function () {
-  //     setIsTop(imdbRating > 8);
-  //   },
-  //   [imdbRating]
-  // );
-
-  const isTop = imdbRating > 8;
-  console.log(isTop);
-
-  const [avgRating, setAvgRating] = useState(0);
-
   function handleAdd() {
     const newWatchedMovie = {
       imdbID: selectedId,
@@ -301,10 +283,7 @@ function MovieDescription({
     };
 
     onAddWatchedMovie(newWatchedMovie);
-    // onCloseMovie();
-
-    setAvgRating(Number(imdbRating));
-    setAvgRating((avgRating) => (avgRating + userRating) / 2);
+    onCloseMovie();
   }
 
   useEffect(
@@ -382,8 +361,6 @@ function MovieDescription({
               </p>
             </div>
           </header>
-
-          <p>{avgRating}</p>
 
           <section>
             <div className="rating">
