@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NavBar from "./components/NavBar";
 import Main from "./components/Main";
 import Box from "./components/Box";
@@ -236,10 +236,29 @@ function Movie({ movie, onSelectMovie }) {
 }
 
 function SearchBox({ query, setQuery }) {
-  useEffect(function () {
-    const el = document.querySelector(".search");
-    console.log(el);
-  }, []);
+  const inputEl = useRef(null);
+
+  useEffect(
+    function () {
+      function callBack(e) {
+        if (document.activeElement === inputEl.current) return;
+
+        if (e.code === "Enter") {
+          inputEl.current.focus();
+          setQuery("");
+        }
+      }
+
+      document.addEventListener("keydown", callBack);
+      return () => document.addEventListener("keydown", callBack);
+    },
+    [setQuery]
+  );
+
+  // useEffect(function () {
+  //   const el = document.querySelector(".search");
+  //   el.focus();
+  // }, []);
 
   return (
     <input
@@ -248,6 +267,7 @@ function SearchBox({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={inputEl}
     />
   );
 }
@@ -270,6 +290,15 @@ function MovieDescription({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [userRating, setUserRating] = useState("");
+
+  const countRef = useRef(0);
+
+  useEffect(
+    function () {
+      if (userRating) countRef.current = countRef.current + 1;
+    },
+    [userRating]
+  );
 
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
 
@@ -299,6 +328,7 @@ function MovieDescription({
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(" ").at(0)),
       userRating,
+      countRatingDecesion: countRef,
     };
 
     onAddWatchedMovie(newWatchedMovie);
