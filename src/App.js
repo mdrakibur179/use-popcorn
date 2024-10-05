@@ -236,6 +236,11 @@ function Movie({ movie, onSelectMovie }) {
 }
 
 function SearchBox({ query, setQuery }) {
+  useEffect(function () {
+    const el = document.querySelector(".search");
+    console.log(el);
+  }, []);
+
   return (
     <input
       className="search"
