@@ -5,6 +5,7 @@ import Box from "./components/Box";
 import { BounceLoader } from "react-spinners";
 import StarRating from "./components/StarRating";
 import { useMovies } from "./useMovies";
+import { useStorageState } from "./useStorageState";
 
 // const tempMovieData = [
 //   {
@@ -64,11 +65,11 @@ export default function App() {
 
   const { movies, isLoading, error } = useMovies(query);
 
-  // const [watched, setWatched] = useState([]);
-  const [watched, setWatched] = useState(function () {
-    const storedValue = localStorage.getItem("watched");
-    return storedValue ? JSON.parse(storedValue) : [];
-  });
+  const [watched, setWatched] = useStorageState([], "watched");
+  // const [watched, setWatched] = useState(function () {
+  //   const storedValue = localStorage.getItem("watched");
+  //   return storedValue ? JSON.parse(storedValue) : [];
+  // });
 
   // useEffect(function () {
   //   console.log("After Initial Render");
@@ -97,13 +98,6 @@ export default function App() {
   function handleDeleteWatchedMovie(id) {
     setWatched((watched) => watched.filter((movie) => movie.imdbID !== id));
   }
-
-  useEffect(
-    function () {
-      localStorage.setItem("watched", JSON.stringify(watched));
-    },
-    [watched]
-  );
 
   return (
     <>
