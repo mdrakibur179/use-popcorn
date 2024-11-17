@@ -137,6 +137,12 @@ body {
   position: relative;
 }
 
+@media (max-width: 1024px) {
+  .box {
+    max-height: 44rem;
+  }
+}
+
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -420,7 +426,6 @@ body {
   aspect-ratio: 1;
   border-radius: 50%;
   border: none;
-  /* background-color: var(--color-text); */
   background-color: #fff;
   color: var(--color-background-500);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
